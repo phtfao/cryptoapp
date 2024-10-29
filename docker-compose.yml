@@ -3,6 +3,8 @@
 services:
   crypto-db:
     image: postgres:13
+    volumes:
+      - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
@@ -25,4 +27,8 @@ services:
       DB_PORT: ${DB_PORT}
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
-    command: ["sh", "-c", "php artisan migrate && php artisan serve --host=0.0.0.0 --port=${PORT}"]
+      DB_PASSWORD: ${DB_PASSWORD}
+      PORT: 80
+
+volumes:
+  db_data:

@@ -20,16 +20,24 @@ WORKDIR /app
 COPY --link --from=composer /usr/bin/composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 COPY --link composer.json composer.lock ./
-COPY --link database/ database/
 RUN set -eux; \
-    composer install --prefer-dist --no-dev --classmap-authoritative --no-scripts --no-progress; \
+    composer install --prefer-dist --no-dev --no-autoloader --no-plugins --no-scripts --no-progress; \
     composer clear-cache
 
 COPY --link ./ ./
 
+COPY <<'ENTRYPOINT' /usr/bin/entrypoint
+#!/bin/sh -e
+php artisan migrate
+php artisan serve --host=0.0.0.0 --port=$PORT
+ENTRYPOINT
+
 RUN set -eux; \
-    php artisan key:generate
+    composer dump-autoload --classmap-authoritative; \
+    chmod +x /usr/bin/entrypoint; \
+    php artisan key:generate; \
+    chown www-data:www-data -R ./;
 
-EXPOSE 80
+ENTRYPOINT ["/usr/bin/entrypoint"]
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT}"]
+USER www-data
