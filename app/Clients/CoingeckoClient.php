@@ -36,7 +36,6 @@ class CoingeckoClient
 
     public function getPriceAtDateTime($crypto, $dateTime)
     {
-        dd($crypto, $dateTime);
         $response = $this->client->get('/api/v3/coins/' . $crypto . '/history', [
             'query' => [
                 'date' => $dateTime,
