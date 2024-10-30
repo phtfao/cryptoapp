@@ -38,6 +38,8 @@ RUN set -eux; \
     php artisan key:generate; \
     chown www-data:www-data -R ./;
 
+EXPOSE 80
+
 ENTRYPOINT ["/usr/bin/entrypoint"]
 
 USER www-data

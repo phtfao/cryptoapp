@@ -90,7 +90,7 @@ class CryptoService
             $date = Carbon::createFromFormat('Y-m-d h:i:s', $date)->format('d-m-Y h:i:s');
             $price = $this->getPriceAtDateTime($symbol, $date);
         } else {
-            $date = Carbon::now();
+            $date = Carbon::now()->format('d-m-Y h:i:s');
             $price = $this->getMostRecentPrice($symbol);
         }
         $crypto = $this->addCrypto($symbol, $price, $date);
